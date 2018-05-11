@@ -95,6 +95,13 @@ def getCMaps(codes):
 			fontDict=getDictionary(section)
 			cmaps.append(fontDict)
 	return cmaps
+def getTextSections(codes):
+	ts=[]
+	for section in codes:
+		if section.find('BT')>=0 and section.find('ET')>=0:
+			textSection=getTextSection(section)
+			ts.append(textSection)
+	return ts
 fp=open('Melvin-Lim.pdf')
 codes=getAll(fp)
 for i in codes[2].split('\n'):
@@ -102,8 +109,9 @@ for i in codes[2].split('\n'):
 for i in codes[6].split('\n'):
 	print i
 cmaps=getCMaps(codes)
-document=codes[2]
-textSection=getTextSection(document)
-tokens=getTokens(textSection)
-text=translate(tokens,cmaps)
+ts=getTextSections(codes)
+text=''
+for s in ts:
+	tokens=getTokens(s)
+	text+=translate(tokens,cmaps)
 print text
