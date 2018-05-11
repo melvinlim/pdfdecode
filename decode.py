@@ -34,6 +34,19 @@ def getDictionary(cmap):
 			dstString=int(pair[1].strip('<>'),base=16)
 			fontDict[srcCode]=dstString
 	return fontDict
+def getTextSection(document):
+	textStart=document.find('BT')+len('BT')
+	textEnd=document.find('ET')
+	textSection=document[textStart:textEnd].split('\n')
+	return textSection
+def getTokens(document):
+	tokens=[]
+	for line in document:
+		if line.find('TJ')>=0:
+			start=line.find('[')+1
+			end=line.rfind(']')
+			tokens.append(line[start:end])
+	return tokens
 fp=open('Melvin-Lim.pdf')
 codes=getAll(fp)
 for i in codes[2].split('\n'):
@@ -42,3 +55,8 @@ for i in codes[6].split('\n'):
 	print i
 cmap=codes[6]
 fontDict=getDictionary(cmap)
+document=codes[2]
+textSection=getTextSection(document)
+tokens=getTokens(textSection)
+for i in tokens:
+	print i
