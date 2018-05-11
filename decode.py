@@ -22,6 +22,18 @@ def getAll(fp):
 		codes.append(code)
 		code=getNextStream(fp)
 	return codes
+def getDictionary(cmap):
+	fontDict=dict()
+	bfcStart=cmap.find('beginbfchar')+len('beginbfchar')
+	bfcEnd=cmap.find('endbfchar')
+	bfchars=cmap[bfcStart:bfcEnd].split('\n')
+	for line in bfchars:
+		pair=line.split(' ')
+		if len(pair)==2:
+			srcCode=int(pair[0].strip('<>'),base=16)
+			dstString=int(pair[1].strip('<>'),base=16)
+			fontDict[srcCode]=dstString
+	return fontDict
 fp=open('Melvin-Lim.pdf')
 codes=getAll(fp)
 for i in codes[2].split('\n'):
@@ -29,8 +41,4 @@ for i in codes[2].split('\n'):
 for i in codes[6].split('\n'):
 	print i
 cmap=codes[6]
-bfcStart=cmap.find('beginbfchar')+len('beginbfchar')
-bfcEnd=cmap.find('endbfchar')
-bfchars=cmap[bfcStart:bfcEnd].split('\n')
-for i in bfchars:
-	print i
+fontDict=getDictionary(cmap)
