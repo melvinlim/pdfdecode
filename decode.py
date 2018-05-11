@@ -1,13 +1,18 @@
 import zlib
+from obj import Obj
 def findNextStream(fp):
+	findNext(fp,'stream')
+def findNext(fp,identifier):
 	line=fp.readline()
-	while line!='' and line.strip()!='stream':
+	while line!='' and line.strip()!=identifier:
 		line=fp.readline()
 def getNextStream(fp):
+	return getNext(fp,'endstream')
+def getNext(fp,identifier):
 	findNextStream(fp)
 	code=''
 	line=fp.readline()
-	while line!='' and line.strip()!='endstream':
+	while line!='' and line.strip()!=identifier:
 		code+=line
 		line=fp.readline()
 	try:
@@ -125,10 +130,6 @@ def getTextSections(codes):
 	return ts
 fp=open('Melvin-Lim.pdf')
 codes=getAll(fp)
-for i in codes[2].split('\n'):
-	print i
-for i in codes[6].split('\n'):
-	print i
 cmaps=getCMaps(codes)
 ts=getTextSections(codes)
 text=''
@@ -136,3 +137,4 @@ for s in ts:
 	tokens=getTokens(s)
 	text+=translate(tokens,cmaps)
 print text
+obj=Obj()
