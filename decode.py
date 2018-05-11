@@ -28,3 +28,9 @@ for i in codes[2].split('\n'):
 	print i
 for i in codes[6].split('\n'):
 	print i
+cmap=codes[6]
+bfcStart=cmap.find('beginbfchar')+len('beginbfchar')
+bfcEnd=cmap.find('endbfchar')
+bfchars=cmap[bfcStart:bfcEnd].split('\n')
+for i in bfchars:
+	print i
