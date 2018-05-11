@@ -62,9 +62,15 @@ def translate(tokens,fontDict):
 		for token in line:
 			if token[0]=='<':
 				codes=getCodes(token.strip('<>'))
-				print codes
+				for code in codes:
+					x=int(code,base=16)
+					if x in fontDict:
+						text+=chr(fontDict[x])
+					else:
+						text+='?'
 			else:
 				text+='#'
+	return text
 fp=open('Melvin-Lim.pdf')
 codes=getAll(fp)
 for i in codes[2].split('\n'):
