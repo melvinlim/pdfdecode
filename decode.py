@@ -46,6 +46,10 @@ def getTokens(document):
 			end=line.rfind(']')
 			token=line[start:end].split(' ')
 			tokens.append(token)
+		elif line.find('Tf')>=0:
+			token=[line.split(' ')[0]]
+#			token=[line]
+			tokens.append(token)
 	return tokens
 def getCodes(token):
 	codes=[]
@@ -71,6 +75,9 @@ def translate(tokens,fontDict):
 						text+=letter
 					else:
 						text+='?'
+			elif token[0]=='/':
+				print token
+				text+='['+token+']'
 			else:
 				text+='#'
 	return text
