@@ -45,8 +45,26 @@ def getTokens(document):
 		if line.find('TJ')>=0:
 			start=line.find('[')+1
 			end=line.rfind(']')
-			tokens.append(line[start:end])
+			token=line[start:end].split(' ')
+			tokens.append(token)
 	return tokens
+def getCodes(token):
+	codes=[]
+	n=len(token)
+	i=0
+	while i<n:
+		codes+=[token[i:i+4]]
+		i+=4
+	return codes
+def translate(tokens,fontDict):
+	text=''
+	for line in tokens:
+		for token in line:
+			if token[0]=='<':
+				codes=getCodes(token.strip('<>'))
+				print codes
+			else:
+				text+='#'
 fp=open('Melvin-Lim.pdf')
 codes=getAll(fp)
 for i in codes[2].split('\n'):
@@ -58,5 +76,4 @@ fontDict=getDictionary(cmap)
 document=codes[2]
 textSection=getTextSection(document)
 tokens=getTokens(textSection)
-for i in tokens:
-	print i
+text=translate(tokens,fontDict)
