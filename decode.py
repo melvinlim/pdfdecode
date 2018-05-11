@@ -22,8 +22,7 @@ def getAll(fp):
 		codes.append(code)
 		code=getNextStream(fp)
 	return codes
-def getDictionary(cmap):
-	fontDict=dict()
+def addDictionary(cmap,fontDict):
 	bfcStart=cmap.find('beginbfchar')+len('beginbfchar')
 	bfcEnd=cmap.find('endbfchar')
 	bfchars=cmap[bfcStart:bfcEnd].split('\n')
@@ -65,7 +64,11 @@ def translate(tokens,fontDict):
 				for code in codes:
 					x=int(code,base=16)
 					if x in fontDict:
-						text+=chr(fontDict[x])
+						if fontDict[x] in range(256):
+							letter=chr(fontDict[x])
+						else:
+							letter='*'
+						text+=letter
 					else:
 						text+='?'
 			else:
@@ -77,9 +80,13 @@ for i in codes[2].split('\n'):
 	print i
 for i in codes[6].split('\n'):
 	print i
+fontDict=dict()
 cmap=codes[6]
-fontDict=getDictionary(cmap)
+fontDict=addDictionary(cmap,fontDict)
+cmap=codes[9]
+fontDict=addDictionary(cmap,fontDict)
 document=codes[2]
 textSection=getTextSection(document)
 tokens=getTokens(textSection)
 text=translate(tokens,fontDict)
+print text
