@@ -1,24 +1,40 @@
 import zlib
 from obj import Obj
+def getAllObjects(fp):
+	codes=[]
+	code=getNext(fp,'obj')
+	while code!='':
+		codes.append(code)
+		code=getNext(fp,'obj')
+	return codes
 def findNextStream(fp):
 	findNext(fp,'stream')
 def findNext(fp,identifier):
 	line=fp.readline()
-	while line!='' and line.strip()!=identifier:
+	while line!='' and line.find(identifier)<0:
 		line=fp.readline()
+	if identifier=='obj':
+		if len(line.split(' '))!=3:
+			while line!='' and line.find(identifier)<0 and line.split(' ')!=3:
+				line=fp.readline()
+	elif identifier=='stream':
+		if line.strip()!='stream':
+			while line!='' and line.strip()!='stream':
+				line=fp.readline()
 def getNextStream(fp):
 	return getNext(fp,'endstream')
 def getNext(fp,identifier):
-	findNextStream(fp)
+	findNext(fp,identifier)
+	endMarker='end'+identifier
 	code=''
 	line=fp.readline()
-	while line!='' and line.strip()!=identifier:
+	while line!='' and line.strip()!=endMarker:
 		code+=line
 		line=fp.readline()
-	try:
-		code=zlib.decompress(code)
-	except:
-		return code
+#	try:
+#		code=zlib.decompress(code)
+#	except:
+#		return code
 	return code
 def getAll(fp):
 	codes=[]
@@ -129,12 +145,13 @@ def getTextSections(codes):
 			ts.append(textSection)
 	return ts
 fp=open('Melvin-Lim.pdf')
-codes=getAll(fp)
-cmaps=getCMaps(codes)
-ts=getTextSections(codes)
-text=''
-for s in ts:
-	tokens=getTokens(s)
-	text+=translate(tokens,cmaps)
-print text
+codes=getAllObjects(fp)
+#codes=getAll(fp)
+#cmaps=getCMaps(codes)
+#ts=getTextSections(codes)
+#text=''
+#for s in ts:
+#	tokens=getTokens(s)
+#	text+=translate(tokens,cmaps)
+#print text
 obj=Obj()
