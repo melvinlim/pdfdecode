@@ -88,19 +88,20 @@ def translate(tokens,cmaps):
 			else:
 				text+='#'
 	return text
+def getCMaps(codes):
+	cmaps=[]
+	for section in codes:
+		if section.find('beginbf')>=0:
+			fontDict=getDictionary(section)
+			cmaps.append(fontDict)
+	return cmaps
 fp=open('Melvin-Lim.pdf')
 codes=getAll(fp)
 for i in codes[2].split('\n'):
 	print i
 for i in codes[6].split('\n'):
 	print i
-cmaps=[]
-cmap=codes[6]
-fontDict=getDictionary(cmap)
-cmaps.append(fontDict)
-cmap=codes[9]
-fontDict=getDictionary(cmap)
-cmaps.append(fontDict)
+cmaps=getCMaps(codes)
 document=codes[2]
 textSection=getTextSection(document)
 tokens=getTokens(textSection)
