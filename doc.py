@@ -15,10 +15,6 @@ class Doc():
 		while line!='' and line.find(identifier)<0:
 			line=fp.readline()
 		return line
-		if identifier=='stream':
-			if line.strip()!='stream':
-				while line!='' and line.strip()!='stream':
-					line=fp.readline()
 	def getNextObj(self,fp):
 		identifier='obj'
 		line=self.findNext(fp,identifier)
