@@ -16,17 +16,16 @@ class Doc():
 			line=fp.readline()
 		return line
 	def getNextObj(self,fp):
-		identifier='obj'
-		line=self.findNext(fp,identifier)
+		line=self.findNext(fp,'obj')
 		while line.strip()!='obj' and len(line.split(' '))!=3 and line!='':
-			line=self.findNext(fp,identifier)
+			line=self.findNext(fp,'obj')
 		objN=-1
 		genN=-1
 		header=line.split(' ')
 		if len(header)==3:
 			objN=header[0]
 			genN=header[1]
-		endMarker='end'+identifier
+		endMarker='endobj'
 		raw=''
 		line=fp.readline()
 		while line!='' and line.strip()!=endMarker:
