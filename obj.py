@@ -50,7 +50,7 @@ def extractRawDictionary(raw):
 	start=raw.find('<<')
 	end=raw.rfind('>>')
 	if start<0 or end<0:
-		return 'asdf'
+		return ''
 	tmp=raw[start+2:end]
 	tmp=tmp.strip('\n')
 	tmp=tmp.strip('\r')
