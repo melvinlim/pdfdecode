@@ -7,7 +7,7 @@ def extractDictionary(raw):
 	n=len(words)
 	i=0
 	for word in words:
-		if word.find('ToUnicode'):
+		if word.find('/ToUnicode')>=0:
 				result[word]=words[i+1:i+4]
 		i+=1
 	i=1
@@ -16,7 +16,7 @@ def extractDictionary(raw):
 		if len(key)>0 and key[0]=='/':
 			value=words[i+1]
 			if value.find('<<')>=0:
-				result[key]='dictionary'
+				i+=1
 				tmp=[]
 				while i<n and value.find('>>')<0:
 					i+=1
@@ -25,11 +25,13 @@ def extractDictionary(raw):
 				result[key]=tmp
 			elif value.find('(')>=0:
 				result[key]='string'
+				i+=1
 				while i<n and value.find(')')<0:
 					i+=1
 					value=words[i]
 			elif value.find('[')>=0:
 				result[key]='array'
+				i+=1
 				while i<n and value.find(']')<0:
 					i+=1
 					value=words[i]
@@ -39,17 +41,18 @@ def extractDictionary(raw):
 					if words[i+3][0]=='R':
 						values=words[i+1:i+4]
 					result[key]=values
-					i+=3
+					i+=4
 				if key not in result:
 					result[key]=value
-					i+=1
+					i+=2
 #			elif key.find('ToUnicode')>=0:	#just to get it working.
 #				result[key]=words[i+1:i+4]
 #				i+=3
 			else:
 				result[key]=value
 				i+=2
-		i+=1
+		else:
+			i+=1
 	return result
 def extractRawDictionary(raw):
 	start=raw.find('<<')
