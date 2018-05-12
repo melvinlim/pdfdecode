@@ -1,4 +1,4 @@
-def extractTokens(raw):
+def extractDictionary(raw):
 	start=raw.find('<<')+2
 	end=raw.rfind('>>')
 	if start<0 or end<0:
@@ -20,7 +20,7 @@ class Obj():
 		self.objN=int(objN)
 		self.genN=int(genN)
 		self.stream=extractStream(raw)
-		params=extractTokens(raw)
+		params=extractDictionary(raw)
 		paramEnd=raw.rfind('>>')
 		if paramEnd>=0:
 			paramEnd+=2
