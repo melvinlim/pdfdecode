@@ -1,9 +1,12 @@
 def extractDictionary(raw):
-	start=raw.find('<<')+2
+	start=raw.find('<<')
 	end=raw.rfind('>>')
 	if start<0 or end<0:
-		return raw
-	tmp=raw[start:end]
+		return 'asdf'
+	tmp=raw[start+2:end]
+	tmp=tmp.strip('\n')
+	tmp=tmp.strip('\r')
+	tmp=tmp.strip('\n')
 	return tmp
 def extractStream(raw):
 	start=raw.find('stream')
@@ -30,11 +33,12 @@ class Obj():
 		self.params=dict()
 		self.isFontTable=False
 		self.isPage=False
-		for words in params.split('\n'):
-			tmp=words.split(' ')
-			tmp=filter(None,tmp)
-			if len(tmp)>1:
-				self.params[tmp[0]]=tmp[1:]
+		if params!=[]:
+			for words in params.split('\n'):
+				tmp=words.split(' ')
+				tmp=filter(None,tmp)
+				if len(tmp)>1:
+					self.params[tmp[0]]=tmp[1:]
 		fontIndex=params.find('/Font')
 		if fontIndex>=0:
 			fontIndex+=5
