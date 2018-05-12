@@ -2,6 +2,7 @@ from obj import Obj
 class Doc():
 	def __init__(self,fp):
 		self.objs=self.getAllObjects(fp)
+		self.pages=self.getPages()
 	def getAllObjects(self,fp):
 		objs=[]
 		obj=self.getNextObj(fp)
@@ -63,13 +64,19 @@ class Doc():
 				ret.append(o)
 		return ret
 	def display(self):
-		pages=self.getPages()
 #		print pages
-		for page in pages:
+		for page in self.pages:
 			if '/Contents' in page.params:
 				tmp=self.getObjN(int(page.params['/Contents'][0]))
 				if tmp!=0:
 					print tmp.data
+			if '/Resources' in page.params:
+				if page.params['/Resources'][2]=='R':
+					tmp=self.getObjN(int(page.params['/Resources'][0]))
+					print tmp
+					if '/Font' in tmp.params:
+						asdf=0
+						print tmp.params['/Font']
 		tmp=self.getCMapObjs()
 		for x in tmp:
 			print x.cmap

@@ -17,20 +17,36 @@ class Obj():
 		self.params=dict()
 		self.isFontTable=False
 		self.isPage=False
+		for words in params:
+			tmp=words.split(' ')
+			tmp=filter(None,tmp)
+			if len(tmp)>1:
+				self.params[tmp[0]]=tmp[1:]
 		fontIndex=data[0].find('/Font')
 		if fontIndex>=0:
 			tmp=data[0][fontIndex:]
 			if tmp.find('<<')>=0:
 #				print tmp.split(' ')
-				if tmp.split(' ')[1].strip('\n')=='<<':
-					tmp=extractTokens(tmp)
+				tmp=tmp.split(' ')
+				if tmp[1].strip('\n')=='<<':
+					tmp=tmp[2:]
+					t=0
+					for word in tmp:
+						if word.strip('\n')=='>>':
+							end=t
+							break
+						t+=1
+					tmp=tmp[:t]
+					tmp=filter(None,tmp)
 					print fontIndex
 					print tmp
-					tmp=tmp.split(' ')
 					n=len(tmp)
 					i=0
+					self.params['/Font']=[]
 					while(i<n):
 						self.params[tmp[i]]=tmp[i+1:i+4]
+						print self.params[tmp[i]]
+						self.params['/Font'].append(tmp[i])
 						i+=4
 					self.isFontTable=True
 		filterIndex=data[0].find('/Filter')
@@ -38,11 +54,6 @@ class Obj():
 			tmp=data[0][filterIndex:].split('\n')
 			tmp=tmp[0]
 			tmp=tmp.split(' ')
-			if len(tmp)>1:
-				self.params[tmp[0]]=tmp[1:]
-		for words in params:
-			tmp=words.split(' ')
-			tmp=filter(None,tmp)
 			if len(tmp)>1:
 				self.params[tmp[0]]=tmp[1:]
 		self.data=[]
