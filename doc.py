@@ -141,10 +141,10 @@ class Doc():
 				elif token[0]=='/':
 					text+='['+token+']'
 					if token[2:4]=='15':
-						print token[2:4]
+						#print token[2:4]
 						fontDict=cmaps[1]
 					else:
-						print token[2:4]
+						#print token[2:4]
 						fontDict=cmaps[0]
 				else:
 					text+='#'
