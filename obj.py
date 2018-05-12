@@ -6,12 +6,19 @@ class Obj():
 		data=data.strip('\n')
 		data=data.split('>>')
 		params=data[0].split('\n')
-		params=filter(None,params)
 		self.params=dict()
+		filterIndex=data[0].find('/Filter')
+		if filterIndex>=0:
+			tmp=data[0][filterIndex:].split('\n')
+			tmp=tmp[0]
+			tmp=tmp.split(' ')
+			if len(tmp)>1:
+				self.params[tmp[0]]=tmp[1:]
 		for words in params:
 			tmp=words.split(' ')
 			tmp=filter(None,tmp)
-			self.params[tmp[0]]=tmp[1:]
+			if len(tmp)>1:
+				self.params[tmp[0]]=tmp[1:]
 		self.data=[]
 		if len(data)==2 and data[1]!='' and data[1]!='\n':
 			tmp=data[1]
@@ -26,8 +33,8 @@ class Obj():
 					self.data=zlib.decompress(tmp)
 				except:
 					print 'zlib failed header check'
-					self.data=tmp
+					self.data=[]
 			else:
 				self.data=tmp
 		else:
-			self.data=raw
+			self.data=[]
