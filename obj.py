@@ -1,4 +1,4 @@
-def extractDictionary(raw):
+def extractRawDictionary(raw):
 	start=raw.find('<<')
 	end=raw.rfind('>>')
 	if start<0 or end<0:
@@ -23,21 +23,20 @@ class Obj():
 		self.objN=int(objN)
 		self.genN=int(genN)
 		self.stream=extractStream(raw)
-		params=extractDictionary(raw)
-		paramEnd=raw.rfind('>>')
+		rawDictionary=extractRawDictionary(raw)
 		self.params=dict()
 		self.isFontTable=False
 		self.isPage=False
-		if params!=[]:
-			for words in params.split('\n'):
+		if rawDictionary!=[]:
+			for words in rawDictionary.split('\n'):
 				tmp=words.split(' ')
 				tmp=filter(None,tmp)
 				if len(tmp)>1:
 					self.params[tmp[0]]=tmp[1:]
-		fontIndex=params.find('/Font')
+		fontIndex=rawDictionary.find('/Font')
 		if fontIndex>=0:
 			fontIndex+=5
-			tmp=params[fontIndex:].replace('\n',' ')
+			tmp=rawDictionary[fontIndex:].replace('\n',' ')
 			if tmp[0:4]!='Desc':
 				nextIndex=tmp.find('<<')
 				if nextIndex>=0:
@@ -63,9 +62,9 @@ class Obj():
 						self.params['/Font'].append(tmp[i])
 						i+=4
 					self.isFontTable=True
-		filterIndex=params.find('/Filter')
+		filterIndex=rawDictionary.find('/Filter')
 		if filterIndex>=0:
-			tmp=params[filterIndex:].split('\n')
+			tmp=rawDictionary[filterIndex:].split('\n')
 			tmp=tmp[0]
 			tmp=tmp.split(' ')
 			if len(tmp)>1:
