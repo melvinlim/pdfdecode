@@ -24,10 +24,14 @@ def extractDictionary(words):
 				#result[key]=tmp
 			elif value.find('(')>=0:
 				result[key]='string'
+				tmp=[]
 				i+=1
+				tmp.append(words[i])
 				while i<n and value.find(')')<0:
 					i+=1
 					value=words[i]
+					tmp.append(value)
+				result[key]=tmp
 			elif value.find('[')>=0:
 				result[key]='array'
 				i+=1
