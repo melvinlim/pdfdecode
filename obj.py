@@ -60,7 +60,7 @@ class Obj():
 			tmp=tmp.split(' ')
 			if len(tmp)>1:
 				self.params[tmp[0]]=tmp[1:]
-		self.data=[]
+		self.stream=[]
 		self.isText=False
 		self.isCMap=False
 		if data!='' and data!='\n':
@@ -73,18 +73,18 @@ class Obj():
 			if '/Filter' in self.params and '/FlateDecode' in self.params['/Filter']:
 				import zlib
 				try:
-					self.data=zlib.decompress(tmp)
+					self.stream=zlib.decompress(tmp)
 				except:
 					print 'zlib failed header check'
-					self.data=[]
+					self.stream=[]
 			else:
-				self.data=tmp
+				self.stream=tmp
 		else:
-			self.data=[]
-		if self.data!=[]:
-			if self.data.find('BT')>=0 and self.data.find('ET')>=0:
+			self.stream=[]
+		if self.stream!=[]:
+			if self.stream.find('BT')>=0 and self.stream.find('ET')>=0:
 				self.isText=True
-			elif self.data.find('CMap')>=0:
+			elif self.stream.find('CMap')>=0:
 				self.cmap=self.getDictionary()
 				self.isCMap=True
 		if '/Type' in self.params and '/Page' in self.params['/Type']:
@@ -92,8 +92,8 @@ class Obj():
 		if '/Page' in self.params:
 			self.isPage=True
 	def getDictionary(self):
-		assert self.data!=[]
-		cmap=self.data
+		assert self.stream!=[]
+		cmap=self.stream
 		fontDict=dict()
 		bfcStart=cmap.find('beginbfchar')+len('beginbfchar')
 		bfcEnd=cmap.find('endbfchar')

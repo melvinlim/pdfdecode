@@ -66,8 +66,8 @@ class Doc():
 			if '/Contents' in page.params:
 				tmp=self.getObjN(int(page.params['/Contents'][0]))
 				if tmp!=0:
-					print tmp.data
-					contents=tmp.data
+					print tmp.stream
+					contents=tmp.stream
 			if '/Resources' in page.params:
 				if page.params['/Resources'][2]=='R':
 					tmp=self.getObjN(int(page.params['/Resources'][0]))
