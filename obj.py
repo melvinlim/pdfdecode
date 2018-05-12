@@ -83,38 +83,6 @@ class Obj():
 		print self.params
 		self.isFontTable=False
 		self.isPage=False
-		fontIndex=rawDictionary.find('/Font')
-		if fontIndex>=0:
-			fontIndex+=5
-			tmp=rawDictionary[fontIndex:].replace('\n',' ')
-			if tmp[0:4]!='Desc':
-				nextIndex=tmp.find('<<')
-				if nextIndex>=0:
-					nextIndex+=2
-					tmp=tmp[nextIndex:]
-					tmp=tmp.split(' ')
-					t=0
-					for word in tmp:
-						if word.strip('\n')=='>>':
-							end=t
-							break
-						t+=1
-					tmp=tmp[:t]
-					tmp=filter(None,tmp)
-#					print fontIndex
-#					print tmp
-					n=len(tmp)
-					i=0
-					if '/Font' in self.params:
-						print self.params['/Font']
-#					self.params['/Font']=[]
-					while i<n and tmp[i][0:2]=='/F':
-#						self.params[tmp[i]]=tmp[i+1:i+4]
-#						print self.params[tmp[i]]
-#						self.params['/Font'].append(tmp[i])
-						i+=4
-					self.isFontTable=True
-					#print self.params['/Font']
 		self.isText=False
 		self.isCMap=False
 		if '/Filter' in self.params and '/FlateDecode' in self.params['/Filter']:
