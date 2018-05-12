@@ -5,11 +5,6 @@ def extractDictionary(raw):
 	tmp.strip(' ')
 	words=tmp.split(' ')
 	n=len(words)
-	i=0
-	for word in words:
-		if word.find('/ToUnicode')>=0:
-				result[word]=words[i+1:i+4]
-		i+=1
 	i=1
 	while i<n:
 		key=words[i]
@@ -45,9 +40,6 @@ def extractDictionary(raw):
 				if key not in result:
 					result[key]=value
 					i+=2
-#			elif key.find('ToUnicode')>=0:	#just to get it working.
-#				result[key]=words[i+1:i+4]
-#				i+=3
 			else:
 				result[key]=value
 				i+=2
