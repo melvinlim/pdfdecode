@@ -1,3 +1,56 @@
+import re
+def extractDictionary(raw):
+	result=dict()
+	tmp=re.sub(r'[\n\r ]+',' ',raw)
+	tmp.strip(' ')
+	words=tmp.split(' ')
+	n=len(words)
+	i=0
+	for word in words:
+		if word.find('ToUnicode'):
+				result[word]=words[i+1:i+4]
+		i+=1
+	i=1
+	while i<n:
+		key=words[i]
+		if len(key)>0 and key[0]=='/':
+			value=words[i+1]
+			if value.find('<<')>=0:
+				result[key]='dictionary'
+				tmp=[]
+				while i<n and value.find('>>')<0:
+					i+=1
+					value=words[i]
+					tmp.append(value)
+				result[key]=tmp
+			elif value.find('(')>=0:
+				result[key]='string'
+				while i<n and value.find(')')<0:
+					i+=1
+					value=words[i]
+			elif value.find('[')>=0:
+				result[key]='array'
+				while i<n and value.find(']')<0:
+					i+=1
+					value=words[i]
+			elif value!='' and re.match(r'[0-9]+',value):
+				if (i+3)<n:
+					values=value
+					if words[i+3][0]=='R':
+						values=words[i+1:i+4]
+					result[key]=values
+					i+=3
+				if key not in result:
+					result[key]=value
+					i+=1
+#			elif key.find('ToUnicode')>=0:	#just to get it working.
+#				result[key]=words[i+1:i+4]
+#				i+=3
+			else:
+				result[key]=value
+				i+=2
+		i+=1
+	return result
 def extractRawDictionary(raw):
 	start=raw.find('<<')
 	end=raw.rfind('>>')
@@ -24,15 +77,10 @@ class Obj():
 		self.genN=int(genN)
 		self.stream=extractStream(raw)
 		rawDictionary=extractRawDictionary(raw)
-		self.params=dict()
+		self.params=extractDictionary(raw)
+		print self.params
 		self.isFontTable=False
 		self.isPage=False
-		if rawDictionary!=[]:
-			for words in rawDictionary.split('\n'):
-				tmp=words.split(' ')
-				tmp=filter(None,tmp)
-				if len(tmp)>1:
-					self.params[tmp[0]]=tmp[1:]
 		fontIndex=rawDictionary.find('/Font')
 		if fontIndex>=0:
 			fontIndex+=5
