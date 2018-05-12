@@ -64,28 +64,48 @@ class Doc():
 				ret.append(o)
 		return ret
 	def display(self):
+		self.fontMap=dict()
 #		print pages
 		for page in self.pages:
+			contents=''
 			if '/Contents' in page.params:
 				tmp=self.getObjN(int(page.params['/Contents'][0]))
 				if tmp!=0:
 					print tmp.data
+					contents=tmp.data
 			if '/Resources' in page.params:
 				if page.params['/Resources'][2]=='R':
 					tmp=self.getObjN(int(page.params['/Resources'][0]))
 					print tmp
 					if '/Font' in tmp.params:
-						asdf=0
 						print tmp.params['/Font']
-		tmp=self.getCMapObjs()
-		for x in tmp:
-			print x.cmap
-	def getTextSection(document):
+						for font in tmp.params['/Font']:
+							fontInfo=tmp.params[font]
+							cmap=0
+							if fontInfo[2].strip('\n')=='R':
+								print fontInfo[0]
+								fontInfo=self.getObjN(int(fontInfo[0]))
+								cmap=self.getObjN(int(fontInfo.params['/ToUnicode'][0])).cmap
+							self.fontMap[font]=cmap
+			print self.fontMap
+			ts=self.getTextSection(contents)
+			cmaps=[]
+			tmp=self.getCMapObjs()
+			for o in tmp:
+				cmaps.append(o.cmap)
+			tokens=self.getTokens(ts)
+			print tokens
+			tmp=self.translate(tokens,cmaps)
+			print tmp
+		#tmp=self.getCMapObjs()
+		#for x in tmp:
+		#	print x.cmap
+	def getTextSection(self,document):
 		textStart=document.find('BT')+len('BT')
 		textEnd=document.find('ET')
 		textSection=document[textStart:textEnd].split('\n')
 		return textSection
-	def getTokens(document):
+	def getTokens(self,document):
 		tokens=[]
 		for line in document:
 			if line.find('TJ')>=0:
@@ -98,7 +118,7 @@ class Doc():
 	#			token=[line]
 				tokens.append(token)
 		return tokens
-	def getCodes(token):
+	def getCodes(self,token):
 		codes=[]
 		n=len(token)
 		i=0
@@ -106,13 +126,13 @@ class Doc():
 			codes+=[token[i:i+4]]
 			i+=4
 		return codes
-	def translate(tokens,cmaps):
+	def translate(self,tokens,cmaps):
 		text=''
 		fontDict=cmaps[0]
 		for line in tokens:
 			for token in line:
 				if token[0]=='<':
-					codes=getCodes(token.strip('<>'))
+					codes=self.getCodes(token.strip('<>'))
 					for code in codes:
 						x=int(code,base=16)
 						if x in fontDict:
@@ -134,17 +154,3 @@ class Doc():
 				else:
 					text+='#'
 		return text
-	def getCMaps(codes):
-		cmaps=[]
-		for section in codes:
-			if section.find('beginbf')>=0:
-				fontDict=getDictionary(section)
-				cmaps.append(fontDict)
-		return cmaps
-	def getTextSections(codes):
-		ts=[]
-		for section in codes:
-			if section.find('BT')>=0 and section.find('ET')>=0:
-				textSection=getTextSection(section)
-				ts.append(textSection)
-		return ts
