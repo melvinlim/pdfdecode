@@ -188,6 +188,7 @@ def getPages(objs):
 	return ret
 fp=open('Melvin-Lim.pdf')
 doc=Doc(fp)
+doc.display()
 #objs=getAllObjects(fp)
 #pages=getPages(objs)
 #for p in pages:

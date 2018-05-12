@@ -71,5 +71,7 @@ class Obj():
 				self.isText=True
 			elif self.data.find('CMap')>=0:
 				self.isCMap=True
-		if 'Type' in self.params and '/Page' in self.params['Type']:
+		if '/Type' in self.params and '/Page' in self.params['/Type']:
+			self.isPage=True
+		if '/Page' in self.params:
 			self.isPage=True
