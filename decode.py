@@ -162,8 +162,13 @@ def getTextSections(codes):
 			textSection=getTextSection(section)
 			ts.append(textSection)
 	return ts
+def getObjN(n,objs):
+	for o in objs:
+		if o.objN==n:
+			return o
+	return 0
 fp=open('Melvin-Lim.pdf')
-codes=getAllObjects(fp)
+objs=getAllObjects(fp)
 #codes=getAll(fp)
 #cmaps=getCMaps(codes)
 #ts=getTextSections(codes)

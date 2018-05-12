@@ -1,7 +1,7 @@
 class Obj():
 	def __init__(self,objN,genN,raw):
-		self.objN=objN
-		self.genN=genN
+		self.objN=int(objN)
+		self.genN=int(genN)
 		data=raw.strip('<<')
 		data=data.strip('\n')
 		data=data.split('>>')
