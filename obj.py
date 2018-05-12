@@ -9,27 +9,31 @@ class Obj():
 	def __init__(self,objN,genN,raw):
 		self.objN=int(objN)
 		self.genN=int(genN)
-		x=extractTokens(raw)
-		data=raw.strip('<<')
-		data=data.strip('\n')
-		data=data.split('>>')
-		params=data[0].split('\n')
+		params=extractTokens(raw)
+		paramEnd=raw.rfind('>>')
+		if paramEnd>=0:
+			paramEnd+=2
+			data=raw[paramEnd:]
+		else:
+			data=''
 		self.params=dict()
 		self.isFontTable=False
 		self.isPage=False
-		for words in params:
+		for words in params.split('\n'):
 			tmp=words.split(' ')
 			tmp=filter(None,tmp)
 			if len(tmp)>1:
 				self.params[tmp[0]]=tmp[1:]
-		fontIndex=data[0].find('/Font')
+		fontIndex=params.find('/Font')
 		if fontIndex>=0:
-			tmp=data[0][fontIndex:]
-			if tmp.find('<<')>=0:
-#				print tmp.split(' ')
-				tmp=tmp.split(' ')
-				if tmp[1].strip('\n')=='<<':
-					tmp=tmp[2:]
+			fontIndex+=5
+			tmp=params[fontIndex:].replace('\n',' ')
+			if tmp[0:4]!='Desc':
+				nextIndex=tmp.find('<<')
+				if nextIndex>=0:
+					nextIndex+=2
+					tmp=tmp[nextIndex:]
+					tmp=tmp.split(' ')
 					t=0
 					for word in tmp:
 						if word.strip('\n')=='>>':
@@ -49,9 +53,9 @@ class Obj():
 						self.params['/Font'].append(tmp[i])
 						i+=4
 					self.isFontTable=True
-		filterIndex=data[0].find('/Filter')
+		filterIndex=params.find('/Filter')
 		if filterIndex>=0:
-			tmp=data[0][filterIndex:].split('\n')
+			tmp=params[filterIndex:].split('\n')
 			tmp=tmp[0]
 			tmp=tmp.split(' ')
 			if len(tmp)>1:
@@ -59,8 +63,8 @@ class Obj():
 		self.data=[]
 		self.isText=False
 		self.isCMap=False
-		if len(data)==2 and data[1]!='' and data[1]!='\n':
-			tmp=data[1]
+		if data!='' and data!='\n':
+			tmp=data
 			if tmp.find('endstream')>=0:
 				tmp=tmp.strip('\n')
 				tmp=tmp.strip('endstream')
@@ -88,8 +92,7 @@ class Obj():
 		if '/Page' in self.params:
 			self.isPage=True
 	def getDictionary(self):
-		if self.data==[]:
-			return
+		assert self.data!=[]
 		cmap=self.data
 		fontDict=dict()
 		bfcStart=cmap.find('beginbfchar')+len('beginbfchar')
