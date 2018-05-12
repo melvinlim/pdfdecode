@@ -1,9 +1,6 @@
 import re
-def extractDictionary(raw):
+def extractDictionary(words):
 	result=dict()
-	tmp=re.sub(r'[\n\r ]+',' ',raw)
-	tmp.strip(' ')
-	words=tmp.split(' ')
 	n=len(words)
 	i=1
 	while i<n:
@@ -72,7 +69,10 @@ class Obj():
 		self.genN=int(genN)
 		self.stream=extractStream(raw)
 		rawDictionary=extractRawDictionary(raw)
-		self.params=extractDictionary(raw)
+		tmp=re.sub(r'[\n\r ]+',' ',raw)
+		tmp.strip(' ')
+		words=tmp.split(' ')
+		self.params=extractDictionary(words)
 		print self.params
 		self.isFontTable=False
 		self.isPage=False
