@@ -105,13 +105,6 @@ class Obj():
 						self.params['/Font'].append(tmp[i])
 						i+=4
 					self.isFontTable=True
-		filterIndex=rawDictionary.find('/Filter')
-		if filterIndex>=0:
-			tmp=rawDictionary[filterIndex:].split('\n')
-			tmp=tmp[0]
-			tmp=tmp.split(' ')
-			if len(tmp)>1:
-				self.params[tmp[0]]=tmp[1:]
 		self.isText=False
 		self.isCMap=False
 		if '/Filter' in self.params and '/FlateDecode' in self.params['/Filter']:
@@ -128,8 +121,6 @@ class Obj():
 				self.cmap=self.getDictionary()
 				self.isCMap=True
 		if '/Type' in self.params and '/Page' in self.params['/Type']:
-			self.isPage=True
-		if '/Page' in self.params:
 			self.isPage=True
 	def getDictionary(self):
 		assert self.stream!=[]
