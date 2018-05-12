@@ -10,11 +10,9 @@ def extractDictionary(words):
 			if value.find('<<')>=0:
 				start=i+2
 				i+=1
-				tmp=[]
 				while i<n and value.find('>>')<0:
 					i+=1
 					value=words[i]
-					tmp.append(value)
 				end=i
 				result[key]=extractDictionary(words[start:end])
 #				print '************************'
@@ -23,7 +21,6 @@ def extractDictionary(words):
 #				print '************************'
 				#result[key]=tmp
 			elif value.find('(')>=0:
-				result[key]='string'
 				tmp=[]
 				i+=1
 				tmp.append(words[i])
@@ -33,11 +30,14 @@ def extractDictionary(words):
 					tmp.append(value)
 				result[key]=tmp
 			elif value.find('[')>=0:
-				result[key]='array'
+				tmp=[]
 				i+=1
+				tmp.append(words[i])
 				while i<n and value.find(']')<0:
 					i+=1
 					value=words[i]
+					tmp.append(value)
+				result[key]=tmp
 			elif value!='' and re.match(r'[0-9]+',value):
 				if (i+3)<n:
 					values=value
