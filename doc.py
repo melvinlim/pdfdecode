@@ -66,30 +66,30 @@ class Doc():
 			if '/Contents' in page.params:
 				tmp=self.getObjN(int(page.params['/Contents'][0]))
 				if tmp!=0:
-					print tmp.stream
+					#print tmp.stream
 					contents=tmp.stream
 			if '/Resources' in page.params:
 				if page.params['/Resources'][2]=='R':
 					tmp=self.getObjN(int(page.params['/Resources'][0]))
-					print tmp
+					#print tmp
 					if '/Font' in tmp.params:
-						print tmp.params['/Font']
+						#print tmp.params['/Font']
 						for font in tmp.params['/Font']:
 							fontInfo=tmp.params[font]
 							cmap=0
 							if fontInfo[2].strip('\n')=='R':
-								print fontInfo[0]
+								#print fontInfo[0]
 								fontInfo=self.getObjN(int(fontInfo[0]))
 								cmap=self.getObjN(int(fontInfo.params['/ToUnicode'][0])).cmap
 							self.fontMap[font]=cmap
-			print self.fontMap
+			#print self.fontMap
 			ts=self.getTextSection(contents)
 			cmaps=[]
 			tmp=self.getCMapObjs()
 			for o in tmp:
 				cmaps.append(o.cmap)
 			tokens=self.getTokens(ts)
-			print tokens
+			#print tokens
 			tmp=self.translate(tokens,cmaps)
 			print tmp
 		#tmp=self.getCMapObjs()
