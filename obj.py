@@ -25,11 +25,6 @@ class Obj():
 		self.stream=extractStream(raw)
 		params=extractDictionary(raw)
 		paramEnd=raw.rfind('>>')
-		if paramEnd>=0:
-			paramEnd+=2
-			data=raw[paramEnd:]
-		else:
-			data=''
 		self.params=dict()
 		self.isFontTable=False
 		self.isPage=False
