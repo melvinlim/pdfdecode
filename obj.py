@@ -5,10 +5,21 @@ def extractTokens(raw):
 		return raw
 	tmp=raw[start:end]
 	return tmp
+def extractStream(raw):
+	start=raw.find('stream')
+	end=raw.rfind('endstream')
+	if start<0 or end<0:
+		return []
+	stream=raw[start+6:end]
+	stream=stream.strip('\n')
+	stream=stream.strip('\r')
+	stream=stream.strip('\n')
+	return stream
 class Obj():
 	def __init__(self,objN,genN,raw):
 		self.objN=int(objN)
 		self.genN=int(genN)
+		self.stream=extractStream(raw)
 		params=extractTokens(raw)
 		paramEnd=raw.rfind('>>')
 		if paramEnd>=0:
@@ -60,27 +71,15 @@ class Obj():
 			tmp=tmp.split(' ')
 			if len(tmp)>1:
 				self.params[tmp[0]]=tmp[1:]
-		self.stream=[]
 		self.isText=False
 		self.isCMap=False
-		if data!='' and data!='\n':
-			tmp=data
-			if tmp.find('endstream')>=0:
-				tmp=tmp.strip('\n')
-				tmp=tmp.strip('endstream')
-				tmp=tmp.strip('stream')
-				tmp=tmp.strip('\n')
-			if '/Filter' in self.params and '/FlateDecode' in self.params['/Filter']:
-				import zlib
-				try:
-					self.stream=zlib.decompress(tmp)
-				except:
-					print 'zlib failed header check'
-					self.stream=[]
-			else:
-				self.stream=tmp
-		else:
-			self.stream=[]
+		if '/Filter' in self.params and '/FlateDecode' in self.params['/Filter']:
+			import zlib
+			try:
+				self.stream=zlib.decompress(self.stream)
+			except:
+				print 'zlib failed header check'
+				self.stream=[]
 		if self.stream!=[]:
 			if self.stream.find('BT')>=0 and self.stream.find('ET')>=0:
 				self.isText=True
