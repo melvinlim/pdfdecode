@@ -105,13 +105,16 @@ class Obj():
 #					print tmp
 					n=len(tmp)
 					i=0
-					self.params['/Font']=[]
+					if '/Font' in self.params:
+						print self.params['/Font']
+#					self.params['/Font']=[]
 					while i<n and tmp[i][0:2]=='/F':
-						self.params[tmp[i]]=tmp[i+1:i+4]
+#						self.params[tmp[i]]=tmp[i+1:i+4]
 #						print self.params[tmp[i]]
-						self.params['/Font'].append(tmp[i])
+#						self.params['/Font'].append(tmp[i])
 						i+=4
 					self.isFontTable=True
+					#print self.params['/Font']
 		self.isText=False
 		self.isCMap=False
 		if '/Filter' in self.params and '/FlateDecode' in self.params['/Filter']:

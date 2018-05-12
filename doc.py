@@ -75,7 +75,7 @@ class Doc():
 					if '/Font' in tmp.params:
 						#print tmp.params['/Font']
 						for font in tmp.params['/Font']:
-							fontInfo=tmp.params[font]
+							fontInfo=tmp.params['/Font'][font]
 							cmap=0
 							if fontInfo[2].strip('\n')=='R':
 								#print fontInfo[0]
