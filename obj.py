@@ -2,19 +2,26 @@ import re
 def extractDictionary(words):
 	result=dict()
 	n=len(words)
-	i=1
+	i=0
 	while i<n:
 		key=words[i]
 		if len(key)>0 and key[0]=='/':
 			value=words[i+1]
 			if value.find('<<')>=0:
+				start=i+2
 				i+=1
 				tmp=[]
 				while i<n and value.find('>>')<0:
 					i+=1
 					value=words[i]
 					tmp.append(value)
-				result[key]=tmp
+				end=i
+				result[key]=extractDictionary(words[start:end])
+#				print '************************'
+#				print words[start:end]
+#				print result[key]
+#				print '************************'
+				#result[key]=tmp
 			elif value.find('(')>=0:
 				result[key]='string'
 				i+=1
