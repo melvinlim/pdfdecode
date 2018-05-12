@@ -1,5 +1,6 @@
 import zlib
 from obj import Obj
+from doc import Doc
 def getAllObjects(fp):
 	objs=[]
 	obj=getNextObj(fp)
@@ -179,8 +180,18 @@ def getTextObjs(objs):
 		if o.isText:
 			ret.append(o)
 	return ret
+def getPages(objs):
+	ret=[]
+	for o in objs:
+		if o.isPage:
+			ret.append(o)
+	return ret
 fp=open('Melvin-Lim.pdf')
-objs=getAllObjects(fp)
+doc=Doc(fp)
+#objs=getAllObjects(fp)
+#pages=getPages(objs)
+#for p in pages:
+#	p.display()
 #codes=getAll(fp)
 #cmaps=getCMaps(codes)
 #ts=getTextSections(codes)

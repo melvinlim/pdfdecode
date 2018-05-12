@@ -16,6 +16,7 @@ class Obj():
 		params=data[0].split('\n')
 		self.params=dict()
 		self.isFontTable=False
+		self.isPage=False
 		fontIndex=data[0].find('/Font')
 		if fontIndex>=0:
 			tmp=data[0][fontIndex:]
@@ -70,3 +71,5 @@ class Obj():
 				self.isText=True
 			elif self.data.find('CMap')>=0:
 				self.isCMap=True
+		if 'Type' in self.params and '/Page' in self.params['Type']:
+			self.isPage=True
