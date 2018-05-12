@@ -23,8 +23,8 @@ class Doc():
 		genN=-1
 		header=line.split(' ')
 		if len(header)==3:
-			objN=header[0]
-			genN=header[1]
+			objN=int(header[0])
+			genN=int(header[1])
 		endMarker='endobj'
 		raw=''
 		line=fp.readline()
