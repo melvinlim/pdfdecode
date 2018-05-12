@@ -42,14 +42,14 @@ class Obj():
 						t+=1
 					tmp=tmp[:t]
 					tmp=filter(None,tmp)
-					print fontIndex
-					print tmp
+#					print fontIndex
+#					print tmp
 					n=len(tmp)
 					i=0
 					self.params['/Font']=[]
-					while(i<n):
+					while i<n and tmp[i][0:2]=='/F':
 						self.params[tmp[i]]=tmp[i+1:i+4]
-						print self.params[tmp[i]]
+#						print self.params[tmp[i]]
 						self.params['/Font'].append(tmp[i])
 						i+=4
 					self.isFontTable=True
@@ -108,11 +108,11 @@ class Obj():
 		bfrEnd=cmap.find('endbfrange')
 		if bfrStart>=0 and bfrEnd>0:
 			bfrange=cmap[bfrStart:bfrEnd].split('\n')
-			print bfrange
+#			print bfrange
 			for line in bfrange:
 				triple=line.split(' ')
 				if len(triple)==3:
-					print triple
+#					print triple
 					if triple[2][0]=='[':
 						pair=0
 					else:
