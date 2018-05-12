@@ -8,8 +8,8 @@ class Obj():
 		params=filter(None,params)
 		self.params=dict()
 		for words in params:
-			tmp=filter(None,words)
-			tmp=tmp.split(' ')
+			tmp=words.split(' ')
+			tmp=filter(None,tmp)
 			self.params[tmp[0]]=tmp[1:]
 		self.data=[]
 		if len(data)>1:
