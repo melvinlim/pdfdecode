@@ -167,6 +167,18 @@ def getObjN(n,objs):
 		if o.objN==n:
 			return o
 	return 0
+def getCMapObjs(objs):
+	ret=[]
+	for o in objs:
+		if o.isCMap:
+			ret.append(o)
+	return ret
+def getTextObjs(objs):
+	ret=[]
+	for o in objs:
+		if o.isText:
+			ret.append(o)
+	return ret
 fp=open('Melvin-Lim.pdf')
 objs=getAllObjects(fp)
 #codes=getAll(fp)

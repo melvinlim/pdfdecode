@@ -20,6 +20,8 @@ class Obj():
 			if len(tmp)>1:
 				self.params[tmp[0]]=tmp[1:]
 		self.data=[]
+		self.isText=False
+		self.isCMap=False
 		if len(data)==2 and data[1]!='' and data[1]!='\n':
 			tmp=data[1]
 			if tmp.find('endstream')>=0:
@@ -38,3 +40,8 @@ class Obj():
 				self.data=tmp
 		else:
 			self.data=[]
+		if self.data!=[]:
+			if self.data.find('BT')>=0 and self.data.find('ET')>=0:
+				self.isText=True
+			elif self.data.find('CMap')>=0:
+				self.isCMap=True
