@@ -70,39 +70,9 @@ class Doc():
 				tmp=self.getObjN(int(page.params['/Contents'][0]))
 				if tmp!=0:
 					print tmp.data
-	def getDictionary(cmap):
-		fontDict=dict()
-		bfcStart=cmap.find('beginbfchar')+len('beginbfchar')
-		bfcEnd=cmap.find('endbfchar')
-		bfchars=cmap[bfcStart:bfcEnd].split('\n')
-		for line in bfchars:
-			pair=line.split(' ')
-			if len(pair)==2:
-				srcCode=int(pair[0].strip('<>'),base=16)
-				dstString=int(pair[1].strip('<>'),base=16)
-				fontDict[srcCode]=dstString
-		bfrStart=cmap.find('beginbfrange')+len('beginbfrange')
-		bfrEnd=cmap.find('endbfrange')
-		if bfrStart>=0 and bfrEnd>0:
-			bfrange=cmap[bfrStart:bfrEnd].split('\n')
-			print bfrange
-			for line in bfrange:
-				triple=line.split(' ')
-				if len(triple)==3:
-					print triple
-					if triple[2][0]=='[':
-						pair=0
-					else:
-						pair=triple[0:2]
-						start=int(pair[0].strip('<>'),base=16)
-						end=int(pair[1].strip('<>'),base=16)
-					srcCode=start
-					offset=int(triple[2].strip('<>'),base=16)
-					while srcCode<=end:
-						fontDict[srcCode]=offset
-						srcCode+=1
-						offset+=1
-		return fontDict
+		tmp=self.getCMapObjs()
+		for x in tmp:
+			print x.cmap
 	def getTextSection(document):
 		textStart=document.find('BT')+len('BT')
 		textEnd=document.find('ET')
