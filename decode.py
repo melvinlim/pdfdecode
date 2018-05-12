@@ -1,28 +1,46 @@
 import zlib
 from obj import Obj
 def getAllObjects(fp):
-	codes=[]
-	code=getNext(fp,'obj')
-	while code!='':
-		codes.append(code)
-		code=getNext(fp,'obj')
-	return codes
+	objs=[]
+	obj=getNextObj(fp)
+	while obj!='':
+		objs.append(obj)
+		obj=getNextObj(fp)
+	return objs
 def findNextStream(fp):
 	findNext(fp,'stream')
 def findNext(fp,identifier):
 	line=fp.readline()
 	while line!='' and line.find(identifier)<0:
 		line=fp.readline()
-	if identifier=='obj':
-		if len(line.split(' '))!=3:
-			while line!='' and line.find(identifier)<0 and line.split(' ')!=3:
-				line=fp.readline()
-	elif identifier=='stream':
+	return line
+	if identifier=='stream':
 		if line.strip()!='stream':
 			while line!='' and line.strip()!='stream':
 				line=fp.readline()
 def getNextStream(fp):
-	return getNext(fp,'endstream')
+	return getNext(fp,'stream')
+def getNextObj(fp):
+	identifier='obj'
+	line=findNext(fp,identifier)
+	while line.strip()!='obj' and len(line.split(' '))!=3 and line!='':
+		line=findNext(fp,identifier)
+	objN=-1
+	genN=-1
+	header=line.split(' ')
+	if len(header)==3:
+		objN=header[0]
+		genN=header[1]
+	endMarker='end'+identifier
+	raw=''
+	line=fp.readline()
+	while line!='' and line.strip()!=endMarker:
+		raw+=line
+		line=fp.readline()
+	if raw=='':
+		return ''
+	obj=Obj(objN,genN,raw)
+	return obj
 def getNext(fp,identifier):
 	findNext(fp,identifier)
 	endMarker='end'+identifier
@@ -35,7 +53,7 @@ def getNext(fp,identifier):
 #		code=zlib.decompress(code)
 #	except:
 #		return code
-	return code
+	return code.strip('\n')
 def getAll(fp):
 	codes=[]
 	code=getNextStream(fp)
@@ -154,4 +172,3 @@ codes=getAllObjects(fp)
 #	tokens=getTokens(s)
 #	text+=translate(tokens,cmaps)
 #print text
-obj=Obj()
