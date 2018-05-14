@@ -12,9 +12,13 @@ def extractStream(raw):
 def getTok(s,e,raw):
 	x=re.search(s,raw)
 	if x:
-		y=re.search(e,raw)
+		i=x.end()
+		y=re.search(e,raw[i:])
 		if y:
-			return (x.end(),y.start())
+			j=y.start()
+#			if j>i:
+			if True:
+				return (i,j)
 	return (None,None)
 def getToken(raw):
 	i=None
@@ -47,8 +51,7 @@ class Obj(dict):
 		s,e,t=getToken(rest)
 		while e:
 			token=rest[s:e]
-			if t=='string':
-				print s,e,t,token
+			print s,e,t,token
 			rest=rest[e:]
 #			if t in ['dictionary','string','array']:
 #				print 'extracting again'
