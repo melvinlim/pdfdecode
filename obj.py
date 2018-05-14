@@ -10,20 +10,25 @@ def extractStream(raw):
 	stream=stream.strip('\n')
 	return stream
 def getToken(raw):
+	t=None
 	x=re.search(r'[/0-9<(\[]',raw)
 	if x:
 		i=x.start()
 		if raw[i]=='<':
 			y=re.search(r'>',raw)
+			t='dictionary'
 		elif raw[i]=='(':
 			y=re.search(r')',raw)
+			t='string'
 		elif raw[i]=='[':
 			y=re.search(r']',raw)
+			t='array'
 		else:
 			y=re.search(r'[\n\r ]',raw)
+			t='number'
 		if y:
 			j=y.start()
-			return (i,j)
+			return (i,j,t)
 	return None
 class Obj(dict):
 	def extractDictionary(self,words):
@@ -87,8 +92,8 @@ class Obj(dict):
 		tmp.strip(' ')
 		words=tmp.split(' ')
 		self.extractDictionary(words)
-		s,e=getToken(raw)
-		print s,e,raw[s:e]
+		s,e,t=getToken(raw)
+		print s,e,t,raw[s:e]
 		self.isFontTable=False
 		self.isPage=False
 		self.isText=False
