@@ -9,48 +9,26 @@ def extractStream(raw):
 	stream=stream.strip('\r')
 	stream=stream.strip('\n')
 	return stream
-def getDictionary(s,e,raw):
+def getBalanced(name,left,right,s,e,raw):
 	p=1
-	s+=2
+	s+=len(left)
 	for i in range(s,e):
-		if raw[i:i+2]=='<<':
+		if raw[i:i+len(left)]==left:
 			p+=1
-		elif raw[i:i+2]=='>>':
+		elif raw[i:i+len(left)]==right:
 			p-=1
 			if p==0:
-				return (s,i,'dictionary')
-	return (None,None,None)
-def getArray(s,e,raw):
-	p=1
-	s+=1
-	for i in range(s,e):
-		if raw[i]=='[':
-			p+=1
-		elif raw[i]==']':
-			p-=1
-			if p==0:
-				return (s,i,'array')
-	return (None,None,None)
-def getString(s,e,raw):
-	p=1
-	s+=1
-	for i in range(s,e):
-		if raw[i]=='(':
-			p+=1
-		elif raw[i]==')':
-			p-=1
-			if p==0:
-				return (s,i,'string')
+				return (s,i,name)
 	return (None,None,None)
 def getToken(raw):
 	n=len(raw)
 	for i in range(n):
 		if raw[i]=='<':
-			return getDictionary(i,n,raw)
+			return getBalanced('dictionary','<<','>>',i,n,raw)
 		elif raw[i]=='[':
-			return getArray(i,n,raw)
+			return getBalanced('array','[',']',i,n,raw)
 		elif raw[i]=='(':
-			return getString(i,n,raw)
+			return getBalanced('string','(',')',i,n,raw)
 #	rex=re.search('/[a-zA-Z]+',raw)
 #	if rex:
 #		return (rex.start(),rex.end(),'name')
