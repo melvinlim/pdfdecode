@@ -18,7 +18,7 @@ def getDictionary(s,e,raw):
 		elif raw[i:i+2]=='>>':
 			p-=1
 			if p==0:
-				return (s,e,'dictionary')
+				return (s,i,'dictionary')
 	return (None,None,None)
 def getArray(s,e,raw):
 	p=1
@@ -29,7 +29,7 @@ def getArray(s,e,raw):
 		elif raw[i]==']':
 			p-=1
 			if p==0:
-				return (s,e,'array')
+				return (s,i,'array')
 	return (None,None,None)
 def getString(s,e,raw):
 	p=1
@@ -40,7 +40,7 @@ def getString(s,e,raw):
 		elif raw[i]==')':
 			p-=1
 			if p==0:
-				return (s,e,'string')
+				return (s,i,'string')
 	return (None,None,None)
 def getToken(raw):
 	n=len(raw)
@@ -65,7 +65,7 @@ class Obj(dict):
 		while e:
 			token=rest[s:e]
 			self.debug=token
-#			print s,e,t,token
+			print s,e,t,token
 			rest=rest[e:]
 #			if t in ['dictionary','string','array']:
 #				print 'extracting again'
