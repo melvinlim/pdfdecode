@@ -9,22 +9,54 @@ def extractStream(raw):
 	stream=stream.strip('\r')
 	stream=stream.strip('\n')
 	return stream
+def getDictionary(s,e,raw):
+	p=1
+	s+=2
+	for i in range(s,e):
+		if raw[i:i+2]=='<<':
+			p+=1
+		elif raw[i:i+2]=='>>':
+			p-=1
+			if p==0:
+				return (s,e,'dictionary')
+	return (None,None,None)
+def getArray(s,e,raw):
+	p=1
+	s+=1
+	for i in range(s,e):
+		if raw[i]=='[':
+			p+=1
+		elif raw[i]==']':
+			p-=1
+			if p==0:
+				return (s,e,'array')
+	return (None,None,None)
+def getString(s,e,raw):
+	p=1
+	s+=1
+	for i in range(s,e):
+		if raw[i]=='(':
+			p+=1
+		elif raw[i]==')':
+			p-=1
+			if p==0:
+				return (s,e,'string')
+	return (None,None,None)
 def getToken(raw):
-	rex=re.search('<<(.*)>>',raw)
-	if rex:
-		return (rex.start()+2,rex.end()-2,'dictionary')
-	rex=re.search('\((.*)\)',raw)
-	if rex:
-		return (rex.start()+1,rex.end()-1,'string')
-	rex=re.search('\[(.*)\]',raw)
-	if rex:
-		return (rex.start()+1,rex.end()-1,'array')
-	rex=re.search('/[a-zA-Z]+',raw)
-	if rex:
-		return (rex.start(),rex.end(),'name')
-	rex=re.search('/[0-9]+',raw)
-	if rex:
-		return (rex.start(),rex.end(),'number')
+	n=len(raw)
+	for i in range(n):
+		if raw[i]=='<':
+			return getDictionary(i,n,raw)
+		elif raw[i]=='[':
+			return getArray(i,n,raw)
+		elif raw[i]=='(':
+			return getString(i,n,raw)
+#	rex=re.search('/[a-zA-Z]+',raw)
+#	if rex:
+#		return (rex.start(),rex.end(),'name')
+#	rex=re.search('/[0-9]+',raw)
+#	if rex:
+#		return (rex.start(),rex.end(),'number')
 	return (None,None,None)
 class Obj(dict):
 	def extDict(self,raw):
