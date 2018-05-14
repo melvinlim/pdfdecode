@@ -20,9 +20,9 @@ def getBalanced(name,left,right,s,e,raw):
 			if p==0:
 				return (s,i,name)
 	return (None,None,None)
-def getToken(raw):
-	n=len(raw)
-	for i in range(n):
+def getToken(s,e,raw):
+	n=e
+	for i in range(s,e):
 		if raw[i]=='<':
 			return getBalanced('dictionary','<<','>>',i,n,raw)
 		elif raw[i]=='[':
@@ -38,18 +38,25 @@ def getToken(raw):
 	return (None,None,None)
 class Obj(dict):
 	def extDict(self,raw):
-		rest=raw
-		s,e,t=getToken(rest)
+		self.debug=dict()
+		n=len(raw)
+		s,e,t=getToken(0,n,raw)
 		while e:
-			token=rest[s:e]
-			self.debug=token
+			token=raw[s:e]
 			print s,e,t,token
-			rest=rest[e:]
+			if t=='name':
+				key=token
+				s,e,t=getToken(e,n,raw)
+				tmp=raw[s:e]
+				value=tmp
+				self.debug[key]=value
+			else:
+				self.extDict(token)
+				s,e,t=getToken(e,n,raw)
 #			if t in ['dictionary','string','array']:
 #				print 'extracting again'
-#				self.extDict(rest)
-#			s,e,t=getToken(rest)
-			s,e,t=getToken(rest)
+#				self.extDict(raw)
+#			s,e,t=getToken(raw)
 	def extractDictionary(self,words):
 		n=len(words)
 		i=0
