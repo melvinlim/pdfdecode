@@ -1,14 +1,4 @@
 import re
-def extractRawDictionary(raw):
-	start=raw.find('<<')
-	end=raw.rfind('>>')
-	if start<0 or end<0:
-		return ''
-	tmp=raw[start+2:end]
-	tmp=tmp.strip('\n')
-	tmp=tmp.strip('\r')
-	tmp=tmp.strip('\n')
-	return tmp
 def extractStream(raw):
 	start=raw.find('stream')
 	end=raw.rfind('endstream')
@@ -77,7 +67,6 @@ class Obj(dict):
 		self.objN=int(objN)
 		self.genN=int(genN)
 		self.stream=extractStream(raw)
-		rawDictionary=extractRawDictionary(raw)
 		tmp=re.sub(r'[\n\r ]+',' ',raw)
 		tmp.strip(' ')
 		words=tmp.split(' ')
