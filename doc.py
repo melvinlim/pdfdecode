@@ -63,19 +63,19 @@ class Doc():
 #		print pages
 		for page in self.pages:
 			contents=''
-			if '/Contents' in page.params:
-				tmp=self.getObjN(int(page.params['/Contents'][0]))
+			if '/Contents' in page:
+				tmp=self.getObjN(int(page['/Contents'][0]))
 				if tmp!=0:
 					#print tmp.stream
 					contents=tmp.stream
-			if '/Resources' in page.params:
-				if page.params['/Resources'][2]=='R':
-					tmp=self.getObjN(int(page.params['/Resources'][0]))
+			if '/Resources' in page:
+				if page['/Resources'][2]=='R':
+					tmp=self.getObjN(int(page['/Resources'][0]))
 					#print tmp
-					if '/Font' in tmp.params:
-						#print tmp.params['/Font']
-						for font in tmp.params['/Font']:
-							fontInfo=tmp.params['/Font'][font]
+					if '/Font' in tmp and tmp['/Font']:
+						#print tmp['/Font']
+						for font in tmp['/Font']:
+							fontInfo=tmp['/Font'][font]
 							cmap=0
 							if fontInfo[2].strip('\n')=='R':
 								#print fontInfo[0]

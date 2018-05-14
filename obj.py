@@ -1,59 +1,4 @@
 import re
-def extractDictionary(words):
-	result=dict()
-	n=len(words)
-	i=0
-	while i<n:
-		key=words[i]
-		if len(key)>0 and key[0]=='/':
-			value=words[i+1]
-			if value.find('<<')>=0:
-				start=i+2
-				i+=1
-				while i<n and value.find('>>')<0:
-					i+=1
-					value=words[i]
-				end=i
-				result[key]=extractDictionary(words[start:end])
-#				print '************************'
-#				print words[start:end]
-#				print result[key]
-#				print '************************'
-				#result[key]=tmp
-			elif value.find('(')>=0:
-				tmp=[]
-				i+=1
-				tmp.append(words[i])
-				while i<n and value.find(')')<0:
-					i+=1
-					value=words[i]
-					tmp.append(value)
-				result[key]=tmp
-			elif value.find('[')>=0:
-				tmp=[]
-				i+=1
-				tmp.append(words[i])
-				while i<n and value.find(']')<0:
-					i+=1
-					value=words[i]
-					tmp.append(value)
-				result[key]=tmp
-			elif value!='' and re.match(r'[0-9]+',value):
-				if (i+3)<n:
-					values=value
-					if words[i+3][0]=='R':
-						values=words[i+1:i+4]
-					result[key]=values
-					i+=4
-				if key not in result:
-					result[key]=value
-					i+=2
-			else:
-				result[key]=value
-				i+=2
-		else:
-			i+=1
-	return result
 def extractRawDictionary(raw):
 	start=raw.find('<<')
 	end=raw.rfind('>>')
@@ -74,7 +19,60 @@ def extractStream(raw):
 	stream=stream.strip('\r')
 	stream=stream.strip('\n')
 	return stream
-class Obj():
+class Obj(dict):
+	def extractDictionary(self,words):
+		n=len(words)
+		i=0
+		while i<n:
+			key=words[i]
+			if len(key)>0 and key[0]=='/':
+				value=words[i+1]
+				if value.find('<<')>=0:
+					start=i+2
+					i+=1
+					while i<n and value.find('>>')<0:
+						i+=1
+						value=words[i]
+					end=i
+					self[key]=self.extractDictionary(words[start:end])
+	#				print '************************'
+	#				print words[start:end]
+	#				print self[key]
+	#				print '************************'
+					#self[key]=tmp
+				elif value.find('(')>=0:
+					tmp=[]
+					i+=1
+					tmp.append(words[i])
+					while i<n and value.find(')')<0:
+						i+=1
+						value=words[i]
+						tmp.append(value)
+					self[key]=tmp
+				elif value.find('[')>=0:
+					tmp=[]
+					i+=1
+					tmp.append(words[i])
+					while i<n and value.find(']')<0:
+						i+=1
+						value=words[i]
+						tmp.append(value)
+					self[key]=tmp
+				elif value!='' and re.match(r'[0-9]+',value):
+					if (i+3)<n:
+						values=value
+						if words[i+3][0]=='R':
+							values=words[i+1:i+4]
+						self[key]=values
+						i+=4
+					if key not in self:
+						self[key]=value
+						i+=2
+				else:
+					self[key]=value
+					i+=2
+			else:
+				i+=1
 	def __init__(self,objN,genN,raw):
 		self.objN=int(objN)
 		self.genN=int(genN)
@@ -83,13 +81,12 @@ class Obj():
 		tmp=re.sub(r'[\n\r ]+',' ',raw)
 		tmp.strip(' ')
 		words=tmp.split(' ')
-		self.params=extractDictionary(words)
-		print self.params
+		self.extractDictionary(words)
 		self.isFontTable=False
 		self.isPage=False
 		self.isText=False
 		self.isCMap=False
-		if '/Filter' in self.params and '/FlateDecode' in self.params['/Filter']:
+		if '/Filter' in self and '/FlateDecode' in self['/Filter']:
 			import zlib
 			try:
 				self.stream=zlib.decompress(self.stream)
@@ -102,7 +99,7 @@ class Obj():
 			elif self.stream.find('CMap')>=0:
 				self.cmap=self.getDictionary()
 				self.isCMap=True
-		if '/Type' in self.params and '/Page' in self.params['/Type']:
+		if '/Type' in self and '/Page' in self['/Type']:
 			self.isPage=True
 	def getDictionary(self):
 		assert self.stream!=[]
