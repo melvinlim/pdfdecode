@@ -64,7 +64,8 @@ class Obj(dict):
 		s,e,t=getToken(rest)
 		while e:
 			token=rest[s:e]
-			print s,e,t,token
+			self.debug=token
+#			print s,e,t,token
 			rest=rest[e:]
 #			if t in ['dictionary','string','array']:
 #				print 'extracting again'
@@ -135,7 +136,12 @@ class Obj(dict):
 		s=raw.find('stream')
 		e=raw.find('endstream')
 		tmp=raw[:s]+raw[e+9:]
-		self.extDict(tmp)
+		if s>=0 and e>=0 and e>s:
+			self.filtered=tmp
+		else:
+			self.filtered=raw
+		self.raw=raw
+		self.extDict(self.filtered)
 		self.isFontTable=False
 		self.isPage=False
 		self.isText=False
