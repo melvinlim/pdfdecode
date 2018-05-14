@@ -15,7 +15,7 @@ def getTok(s,e,raw):
 		i=x.end()
 		y=re.search(e,raw[i:])
 		if y:
-			j=y.start()
+			j=i+y.start()
 #			if j>i:
 			if True:
 				return (i,j)
