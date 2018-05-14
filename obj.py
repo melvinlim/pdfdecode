@@ -9,36 +9,51 @@ def extractStream(raw):
 	stream=stream.strip('\r')
 	stream=stream.strip('\n')
 	return stream
+def getTok(s,e,raw):
+	x=re.search(s,raw)
+	if x:
+		y=re.search(e,raw)
+		if y:
+			return (x.end(),y.start())
+	return (None,None)
 def getToken(raw):
 	i=None
 	j=None
 	t=None
-	x=re.search(r'[/0-9<(\[]',raw)
-	if x:
-		i=x.start()
-		if raw[i]=='<':
-			y=re.search(r'>',raw)
-			t='dictionary'
-		elif raw[i]=='(':
-			y=re.search(r')',raw)
-			t='string'
-		elif raw[i]=='[':
-			y=re.search(r']',raw)
-			t='array'
-		else:
-			y=re.search(r'[\n\r ]',raw)
-			t='number'
-		if y:
-			i=x.end()
-			j=y.start()
+	i,j=getTok('<<','>>',raw)
+	if j:
+		t='dictionary'
+		return (i,j,t)
+	i,j=getTok('\(','\)',raw)
+	if j:
+		t='string'
+		return (i,j,t)
+	i,j=getTok('\[','\]',raw)
+	if j:
+		t='array'
+		return (i,j,t)
+	i,j=getTok('/','[\n\r ]',raw)
+	if j:
+		t='name'
+		return (i,j,t)
+	i,j=getTok('[0-9]','[\n\r ]',raw)
+	if j:
+		t='number'
+		return (i,j,t)
 	return (i,j,t)
 class Obj(dict):
 	def extDict(self,raw):
 		rest=raw
 		s,e,t=getToken(rest)
 		while e:
-			rest=rest[s:e]
-			print s,e,t,rest
+			token=rest[s:e]
+			if t=='string':
+				print s,e,t,token
+			rest=rest[e:]
+#			if t in ['dictionary','string','array']:
+#				print 'extracting again'
+#				self.extDict(rest)
+#			s,e,t=getToken(rest)
 			s,e,t=getToken(rest)
 	def extractDictionary(self,words):
 		n=len(words)
@@ -101,7 +116,10 @@ class Obj(dict):
 		tmp.strip(' ')
 		words=tmp.split(' ')
 		self.extractDictionary(words)
-		self.extDict(raw)
+		s=raw.find('stream')
+		e=raw.find('endstream')
+		tmp=raw[:s]+raw[e+9:]
+		self.extDict(tmp)
 		self.isFontTable=False
 		self.isPage=False
 		self.isText=False
