@@ -29,13 +29,17 @@ def getToken(raw):
 			y=re.search(r'[\n\r ]',raw)
 			t='number'
 		if y:
+			i=x.end()
 			j=y.start()
 	return (i,j,t)
 class Obj(dict):
 	def extDict(self,raw):
-		s,e,t=getToken(raw)
-		if t:
-			print s,e,t,raw[s:e]
+		rest=raw
+		s,e,t=getToken(rest)
+		while e:
+			rest=rest[s:e]
+			print s,e,t,rest
+			s,e,t=getToken(rest)
 	def extractDictionary(self,words):
 		n=len(words)
 		i=0
