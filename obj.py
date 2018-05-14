@@ -29,7 +29,7 @@ def getToken(s,e,raw):
 			return getBalanced('array','[',']',i,n,raw)
 		elif raw[i]=='(':
 			return getBalanced('string','(',')',i,n,raw)
-	rex=re.search('/[a-zA-Z]+',raw[s:e])
+	rex=re.search('/[a-zA-Z]+[0-9]*',raw[s:e])
 	if rex:
 		return (s+rex.start()+1,s+rex.end(),'name')
 #	rex=re.search('/[0-9]+',raw)
@@ -38,12 +38,19 @@ def getToken(s,e,raw):
 	return (None,None,None)
 class Obj(dict):
 	def extDict(self,raw):
-		self.debug=dict()
 		n=len(raw)
 		s,e,t=getToken(0,n,raw)
+		key=None
 		while e:
 			token=raw[s:e]
 			print s,e,t,token
+			if key:
+				value=token
+				self.debug[key]=value
+				key=None
+			elif t=='name':
+				print '*********************************'
+				key=token
 			self.extDict(token)
 			s,e,t=getToken(e,n,raw)
 	def extractDictionary(self,words):
@@ -100,6 +107,7 @@ class Obj(dict):
 			else:
 				i+=1
 	def __init__(self,objN,genN,raw):
+		self.debug=dict()
 		self.objN=int(objN)
 		self.genN=int(genN)
 		self.stream=extractStream(raw)
