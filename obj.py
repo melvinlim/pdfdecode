@@ -28,9 +28,10 @@ def getToken(s,e,raw):
 			return getBalanced('array','[',']',i,e,raw)
 		elif raw[i]=='(':
 			return getBalanced('string','(',')',i,e,raw)
-	rex=re.search('/[a-zA-Z]+[0-9]*',raw[s:e])
-	if rex:
-		return (s+rex.start()+1,s+rex.end(),'name')
+		elif raw[i]=='/':
+			rex=re.search('/[a-zA-Z]+[0-9]*',raw[i:e])
+			if rex:
+				return (i+rex.start()+1,i+rex.end(),'name')
 #	rex=re.search('/[0-9]+',raw)
 #	if rex:
 #		return (rex.start(),rex.end(),'number')
@@ -47,8 +48,8 @@ class Obj(dict):
 				value=token
 				self.debug[key]=value
 				key=None
-			elif t=='name':
 				print '*********************************'
+			elif t=='name':
 				key=token
 			self.extDict(token)
 			s,e,t=getToken(e,n,raw)
