@@ -21,14 +21,13 @@ def getBalanced(name,left,right,s,e,raw):
 				return (s,i,name)
 	return (None,None,None)
 def getToken(s,e,raw):
-	n=e
 	for i in range(s,e):
 		if raw[i]=='<':
-			return getBalanced('dictionary','<<','>>',i,n,raw)
+			return getBalanced('dictionary','<<','>>',i,e,raw)
 		elif raw[i]=='[':
-			return getBalanced('array','[',']',i,n,raw)
+			return getBalanced('array','[',']',i,e,raw)
 		elif raw[i]=='(':
-			return getBalanced('string','(',')',i,n,raw)
+			return getBalanced('string','(',')',i,e,raw)
 	rex=re.search('/[a-zA-Z]+[0-9]*',raw[s:e])
 	if rex:
 		return (s+rex.start()+1,s+rex.end(),'name')
