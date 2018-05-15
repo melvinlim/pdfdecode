@@ -29,16 +29,16 @@ def getToken(s,e,raw):
 		elif raw[i]=='(':
 			return getBalanced('string','(',')',i,e,raw)
 		elif raw[i]=='/':
-			rex=re.search('/[a-zA-Z]+[0-9]*',raw[i:e])
+			rex=re.search('^/[a-zA-Z]+[0-9]*',raw[i:e])
 			if rex:
 				s=i+rex.start()
 				e=i+rex.end()
 				return (s,e,'name')
 		elif raw[i] in '0123456789':
-			rex=re.search('[0-9]+ [0-9]+ R',raw[i:e])
+			rex=re.search('^[0-9]+ [0-9]+ R',raw[i:e])
 			if rex:
 				return (i+rex.start(),i+rex.end(),'pointer')
-			rex=re.search('[0-9]+',raw[i:e])
+			rex=re.search('^[0-9]+',raw[i:e])
 			if rex:
 				return (i+rex.start(),i+rex.end(),'number')
 	return (None,None,None)
