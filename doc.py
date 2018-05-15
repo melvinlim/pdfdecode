@@ -64,7 +64,8 @@ class Doc():
 		for page in self.pages:
 			contents=''
 			if '/Contents' in page:
-				tmp=self.getObjN(int(page['/Contents'][0]))
+				tmp=page['/Contents'].split(' ')
+				tmp=self.getObjN(int(tmp[0]))
 				if tmp!=0:
 					#print tmp.stream
 					contents=tmp.stream

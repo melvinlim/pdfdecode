@@ -52,7 +52,7 @@ class Obj(dict):
 			print self.objN,self.genN,s,e,t,token
 			if key:
 				value=token
-				self.debug[key]=value
+				self[key]=value
 				key=None
 				print '*********************************'
 			elif t=='name':
@@ -121,7 +121,7 @@ class Obj(dict):
 		tmp=re.sub(r'[\n\r ]+',' ',raw)
 		tmp.strip(' ')
 		words=tmp.split(' ')
-		self.extractDictionary(words)
+#		self.extractDictionary(words)
 		s=raw.find('stream')
 		e=raw.find('endstream')
 		tmp=raw[:s]+raw[e+9:]
