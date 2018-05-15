@@ -49,7 +49,7 @@ class Obj(dict):
 		key=None
 		while e:
 			token=raw[s:e]
-			print s,e,t,token
+			print self.objN,self.genN,s,e,t,token
 			if key:
 				value=token
 				self.debug[key]=value
@@ -57,8 +57,7 @@ class Obj(dict):
 				print '*********************************'
 			elif t=='name':
 				key=token
-			#if t!='name' and t!='number':
-			if t!='name' and t!='number' and t!='pointer':
+			if t not in ['name','number','pointer']:
 				self.extDict(token)
 			s,e,t=getToken(e,n,raw)
 	def extractDictionary(self,words):
