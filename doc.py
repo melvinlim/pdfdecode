@@ -1,4 +1,11 @@
 from obj import Obj
+def dereference(doc,p):
+	if 'pointer' in p:
+		res=p['pointer'].split(' ')
+		if len(res)==3 and res[2]=='R':
+			res=doc.getObjN(int(res[0]))
+			return res
+	return None
 class Doc():
 	def __init__(self,fp):
 		self.objs=self.getAllObjects(fp)
@@ -64,32 +71,29 @@ class Doc():
 			self.contents=''
 			d=page['dictionary']
 			if '/Contents' in d:
-				tmp=d['/Contents']['pointer'].split(' ')
-				tmp=self.getObjN(int(tmp[0]))
-				if tmp!=0:
+				tmp=dereference(self,d['/Contents'])
+				if tmp:
 					page.contents=tmp.stream
-			if '/Resources' in page:
-				tmp=page['/Resources'].split(' ')
-				if len(tmp)>=3 and tmp[2]=='R':
-					tmp=self.getObjN(int(tmp[0]))
-					#if '/Font' in tmp and tmp['/Font']:
-					if False:
-						print tmp['/Font']
-						for font in tmp['/Font']:
-							fontInfo=tmp['/Font'][font]
-							cmap=0
-							if fontInfo[2].strip('\n')=='R':
-								fontInfo=self.getObjN(int(fontInfo[0]))
-								cmap=self.getObjN(int(fontInfo.params['/ToUnicode'][0])).cmap
-							self.fontMap[font]=cmap
+			if '/Resources' in d:
+				tmp=dereference(self,d['/Resources'])
+				d=tmp['dictionary']
+				if '/Font' in d:
+					print d['/Font']
+					for font in d['/Font']:
+						fontInfo=d['/Font'][font]
+						cmap=0
+						fontInfo=dereference(self,fontInfo)
+						fontInfo=dereference(self,fontInfo['dictionary']['/ToUnicode'])
+						cmap=fontInfo.cmap
+						self.fontMap[font]=cmap
 			page.ts=self.getTextSection(page.contents)
-			cmaps=[]
+			self.cmaps=[]
 			tmp=self.getCMapObjs()
 			for o in tmp:
-				cmaps.append(o.cmap)
+				self.cmaps.append(o.cmap)
 			tokens=self.getTokens(page.ts)
 			#print tokens
-			tmp=self.translate(tokens,cmaps)
+			tmp=self.translate(tokens,self.cmaps)
 			print tmp
 		#tmp=self.getCMapObjs()
 		#for x in tmp:
