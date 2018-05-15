@@ -86,7 +86,7 @@ class Obj(dict):
 		self.isPage=False
 		self.isText=False
 		self.isCMap=False
-		if '/Filter' in self and '/FlateDecode' in self['/Filter']:
+		if 'dictionary' in self and '/Filter' in self['dictionary'] and '/FlateDecode' in self['dictionary']['/Filter']:
 			import zlib
 			try:
 				self.stream=zlib.decompress(self.stream)
