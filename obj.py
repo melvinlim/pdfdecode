@@ -64,9 +64,6 @@ class Obj(dict):
 		self.objN=int(objN)
 		self.genN=int(genN)
 		self.stream=extractStream(raw)
-		tmp=re.sub(r'[\n\r ]+',' ',raw)
-		tmp.strip(' ')
-		words=tmp.split(' ')
 		s=raw.find('stream')
 		e=raw.find('endstream')
 		tmp=raw[:s]+raw[e+9:]
