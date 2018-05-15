@@ -41,6 +41,10 @@ def getToken(s,e,raw):
 			rex=re.search('^[0-9]+',raw[i:e])
 			if rex:
 				return (i+rex.start(),i+rex.end(),'number')
+		else:
+			rex=re.search('^([a-zA-Z0-9:.-]+[ ]*)+',raw[i:e])
+			if rex:
+				return (i+rex.start(),i+rex.end(),'misc')
 	return (None,None,None)
 class Obj(dict):
 	def extDict(self,raw):
@@ -52,13 +56,17 @@ class Obj(dict):
 			print self.objN,self.genN,s,e,t,token
 			if key:
 				value=token
+				value=Obj(-1,-1,token)
 				self[key]=value
 				key=None
 				print '*********************************'
 			elif t=='name':
 				key=token
-			if t not in ['name','number','pointer']:
-				self.extDict(token)
+			elif t in ['number','pointer','misc']:
+				self[t]=token
+			else:
+				value=Obj(-1,-1,token)
+				self[t]=value
 			s,e,t=getToken(e,n,raw)
 	def __init__(self,objN,genN,raw):
 		self.objN=int(objN)
