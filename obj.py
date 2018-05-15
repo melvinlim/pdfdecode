@@ -42,7 +42,7 @@ def getToken(s,e,raw):
 			if rex:
 				return (i+rex.start(),i+rex.end(),'number')
 		else:
-			rex=re.search('^([a-zA-Z0-9:.-]+[ ]*)+',raw[i:e])
+			rex=re.search('^([/a-zA-Z0-9:.-]+[ ]*)+',raw[i:e])
 			if rex:
 				return (i+rex.start(),i+rex.end(),'misc')
 	return (None,None,None)
@@ -55,8 +55,10 @@ class Obj(dict):
 			token=raw[s:e]
 			print self.objN,self.genN,s,e,t,token
 			if key:
-				value=token
-				value=Obj(-1,-1,token)
+				if t=='name':
+					value=token
+				else:
+					value=Obj(-1,-1,token)
 				self[key]=value
 				key=None
 				print '*********************************'
