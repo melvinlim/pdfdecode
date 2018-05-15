@@ -60,15 +60,14 @@ class Doc():
 		return ret
 	def display(self):
 		self.fontMap=dict()
-#		print pages
 		for page in self.pages:
-			contents=''
-			if '/Contents' in page:
-				tmp=page['/Contents'].split(' ')
+			self.contents=''
+			d=page['dictionary']
+			if '/Contents' in d:
+				tmp=d['/Contents']['pointer'].split(' ')
 				tmp=self.getObjN(int(tmp[0]))
 				if tmp!=0:
-					#print tmp.stream
-					contents=tmp.stream
+					page.contents=tmp.stream
 			if '/Resources' in page:
 				tmp=page['/Resources'].split(' ')
 				if len(tmp)>=3 and tmp[2]=='R':
@@ -80,17 +79,15 @@ class Doc():
 							fontInfo=tmp['/Font'][font]
 							cmap=0
 							if fontInfo[2].strip('\n')=='R':
-								#print fontInfo[0]
 								fontInfo=self.getObjN(int(fontInfo[0]))
 								cmap=self.getObjN(int(fontInfo.params['/ToUnicode'][0])).cmap
 							self.fontMap[font]=cmap
-			#print self.fontMap
-			ts=self.getTextSection(contents)
+			page.ts=self.getTextSection(self.contents)
 			cmaps=[]
 			tmp=self.getCMapObjs()
 			for o in tmp:
 				cmaps.append(o.cmap)
-			tokens=self.getTokens(ts)
+			tokens=self.getTokens(page.ts)
 			#print tokens
 			tmp=self.translate(tokens,cmaps)
 			print tmp
