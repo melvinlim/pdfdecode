@@ -88,9 +88,10 @@ class Doc():
 						self.fontMap[font]=cmap
 			page.ts=self.getTextSection(page.contents)
 			self.cmaps=[]
-			tmp=self.getCMapObjs()
-			for o in tmp:
-				self.cmaps.append(o.cmap)
+			self.cmaps=self.fontMap
+#			tmp=self.getCMapObjs()
+#			for o in tmp:
+#				self.cmaps.append(o.cmap)
 			tokens=self.getTokens(page.ts)
 			#print tokens
 			tmp=self.translate(tokens,self.cmaps)
@@ -126,7 +127,7 @@ class Doc():
 		return codes
 	def translate(self,tokens,cmaps):
 		text=''
-		fontDict=cmaps[0]
+		fontDict=cmaps['/F15']
 		for line in tokens:
 			for token in line:
 				if token[0]=='<':
@@ -145,10 +146,10 @@ class Doc():
 					text+='['+token+']'
 					if token[2:4]=='15':
 						#print token[2:4]
-						fontDict=cmaps[1]
+						fontDict=cmaps['/F15']
 					else:
 						#print token[2:4]
-						fontDict=cmaps[0]
+						fontDict=cmaps['/F16']
 				else:
 					text+='#'
 		return text
