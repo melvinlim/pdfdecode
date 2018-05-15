@@ -60,59 +60,6 @@ class Obj(dict):
 			if t not in ['name','number','pointer']:
 				self.extDict(token)
 			s,e,t=getToken(e,n,raw)
-	def extractDictionary(self,words):
-		n=len(words)
-		i=0
-		while i<n:
-			key=words[i]
-			if len(key)>0 and key[0]=='/':
-				value=words[i+1]
-				if value.find('<<')>=0:
-					start=i+2
-					i+=1
-					while i<n and value.find('>>')<0:
-						i+=1
-						value=words[i]
-					end=i
-					self[key]=self.extractDictionary(words[start:end])
-	#				print '************************'
-	#				print words[start:end]
-	#				print self[key]
-	#				print '************************'
-					#self[key]=tmp
-				elif value.find('(')>=0:
-					tmp=[]
-					i+=1
-					tmp.append(words[i])
-					while i<n and value.find(')')<0:
-						i+=1
-						value=words[i]
-						tmp.append(value)
-					self[key]=tmp
-				elif value.find('[')>=0:
-					tmp=[]
-					i+=1
-					tmp.append(words[i])
-					while i<n and value.find(']')<0:
-						i+=1
-						value=words[i]
-						tmp.append(value)
-					self[key]=tmp
-				elif value!='' and re.match(r'[0-9]+',value):
-					if (i+3)<n:
-						values=value
-						if words[i+3][0]=='R':
-							values=words[i+1:i+4]
-						self[key]=values
-						i+=4
-					if key not in self:
-						self[key]=value
-						i+=2
-				else:
-					self[key]=value
-					i+=2
-			else:
-				i+=1
 	def __init__(self,objN,genN,raw):
 		self.debug=dict()
 		self.objN=int(objN)
@@ -121,7 +68,6 @@ class Obj(dict):
 		tmp=re.sub(r'[\n\r ]+',' ',raw)
 		tmp.strip(' ')
 		words=tmp.split(' ')
-#		self.extractDictionary(words)
 		s=raw.find('stream')
 		e=raw.find('endstream')
 		tmp=raw[:s]+raw[e+9:]
