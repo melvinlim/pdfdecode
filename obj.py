@@ -99,7 +99,7 @@ class Obj(dict):
 			elif self.stream.find('CMap')>=0:
 				self.cmap=self.getDictionary()
 				self.isCMap=True
-		if '/Type' in self and '/Page' in self['/Type']:
+		if 'dictionary' in self and '/Type' in self['dictionary'] and '/Page' in self['dictionary']['/Type']:
 			self.isPage=True
 	def getDictionary(self):
 		assert self.stream!=[]
