@@ -70,11 +70,12 @@ class Doc():
 					#print tmp.stream
 					contents=tmp.stream
 			if '/Resources' in page:
-				if page['/Resources'][2]=='R':
-					tmp=self.getObjN(int(page['/Resources'][0]))
-					#print tmp
-					if '/Font' in tmp and tmp['/Font']:
-						#print tmp['/Font']
+				tmp=page['/Resources'].split(' ')
+				if len(tmp)>=3 and tmp[2]=='R':
+					tmp=self.getObjN(int(tmp[0]))
+					#if '/Font' in tmp and tmp['/Font']:
+					if False:
+						print tmp['/Font']
 						for font in tmp['/Font']:
 							fontInfo=tmp['/Font'][font]
 							cmap=0

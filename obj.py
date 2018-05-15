@@ -61,7 +61,6 @@ class Obj(dict):
 				self.extDict(token)
 			s,e,t=getToken(e,n,raw)
 	def __init__(self,objN,genN,raw):
-		self.debug=dict()
 		self.objN=int(objN)
 		self.genN=int(genN)
 		self.stream=extractStream(raw)
@@ -77,7 +76,6 @@ class Obj(dict):
 			self.filtered=raw
 		self.raw=raw
 		self.extDict(self.filtered)
-		self.isFontTable=False
 		self.isPage=False
 		self.isText=False
 		self.isCMap=False
