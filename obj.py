@@ -31,10 +31,15 @@ def getToken(s,e,raw):
 		elif raw[i]=='/':
 			rex=re.search('/[a-zA-Z]+[0-9]*',raw[i:e])
 			if rex:
-				return (i+rex.start()+1,i+rex.end(),'name')
-#	rex=re.search('/[0-9]+',raw)
-#	if rex:
-#		return (rex.start(),rex.end(),'number')
+				s=i+rex.start()
+				e=i+rex.end()
+				return (s,e,'name')
+		elif raw[i] in '0123456789':
+			rex=re.search('[0-9]+',raw[i:e])
+			if rex:
+#				print 'number'
+#				print raw[i+rex.start():i+rex.end()]
+				return (i+rex.start(),i+rex.end(),'number')
 	return (None,None,None)
 class Obj(dict):
 	def extDict(self,raw):
@@ -51,7 +56,8 @@ class Obj(dict):
 				print '*********************************'
 			elif t=='name':
 				key=token
-			self.extDict(token)
+			if t!='name' and t!='number':
+				self.extDict(token)
 			s,e,t=getToken(e,n,raw)
 	def extractDictionary(self,words):
 		n=len(words)
