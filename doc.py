@@ -82,7 +82,7 @@ class Doc():
 								fontInfo=self.getObjN(int(fontInfo[0]))
 								cmap=self.getObjN(int(fontInfo.params['/ToUnicode'][0])).cmap
 							self.fontMap[font]=cmap
-			page.ts=self.getTextSection(self.contents)
+			page.ts=self.getTextSection(page.contents)
 			cmaps=[]
 			tmp=self.getCMapObjs()
 			for o in tmp:
