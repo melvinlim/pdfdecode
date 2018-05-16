@@ -10,6 +10,12 @@ class Doc():
 	def __init__(self,fp):
 		self.objs=self.getAllObjects(fp)
 		self.pages=self.getPages()
+	def search(self,s):
+		res=[]
+		for o in self.objs:
+			if 'dictionary' in o and s in o['dictionary']:
+				res.append(o)
+		return res
 	def getAllObjects(self,fp):
 		objs=[]
 		obj=self.getNextObj(fp)
