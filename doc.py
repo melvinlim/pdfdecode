@@ -84,7 +84,8 @@ class Doc():
 						cmap=0
 						fontInfo=dereference(self,fontInfo)
 						fontInfo=dereference(self,fontInfo['dictionary']['/ToUnicode'])
-						cmap=fontInfo.cmap
+						cmap=fontInfo.getDictionary()
+#						cmap=fontInfo.cmap
 						self.fontMap[font]=cmap
 			page.ts=self.getTextSection(page.contents)
 			self.cmaps=[]
@@ -127,7 +128,6 @@ class Doc():
 		return codes
 	def translate(self,tokens,cmaps):
 		text=''
-		fontDict=cmaps['/F15']
 		for line in tokens:
 			for token in line:
 				if token[0]=='<':

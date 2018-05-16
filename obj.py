@@ -96,9 +96,9 @@ class Obj(dict):
 		if self.stream!=[]:
 			if self.stream.find('BT')>=0 and self.stream.find('ET')>=0:
 				self.isText=True
-			elif self.stream.find('CMap')>=0:
-				self.cmap=self.getDictionary()
-				self.isCMap=True
+#			elif self.stream.find('CMap')>=0:
+#				self.cmap=self.getDictionary()
+#				self.isCMap=True
 		if 'dictionary' in self and '/Type' in self['dictionary']:
 			if self['dictionary']['/Type']=='/Page':
 				self.isPage=True
