@@ -83,10 +83,12 @@ class Doc():
 						fontInfo=d['/Font'][font]
 						cmap=0
 						fontInfo=dereference(self,fontInfo)
-						fontInfo=dereference(self,fontInfo['dictionary']['/ToUnicode'])
-						cmap=fontInfo.getDictionary()
-#						cmap=fontInfo.cmap
-						self.fontMap[font]=cmap
+						fontInfo=fontInfo['dictionary']
+						if '/ToUnicode' in fontInfo:
+							fontInfo=dereference(self,fontInfo['/ToUnicode'])
+							cmap=fontInfo.getDictionary()
+	#						cmap=fontInfo.cmap
+							self.fontMap[font]=cmap
 			page.ts=self.getTextSection(page.contents)
 			self.cmaps=[]
 			self.cmaps=self.fontMap
