@@ -3,7 +3,7 @@ def dereference(doc,p):
 	if 'pointer' in p:
 		res=p['pointer'].split(' ')
 		if len(res)==3 and res[2]=='R':
-			res=doc.getObjN(int(res[0]))
+			res=doc.getObj(int(res[0]),int(res[1]))
 			return res
 	return None
 class Doc():
@@ -42,9 +42,9 @@ class Doc():
 			return ''
 		obj=Obj(objN,genN,raw)
 		return obj
-	def getObjN(self,n):
+	def getObj(self,oid,gid):
 		for o in self.objs:
-			if o.objN==n:
+			if o.objN==oid and o.genN==gid:
 				return o
 		return 0
 	def getCMapObjs(self):
