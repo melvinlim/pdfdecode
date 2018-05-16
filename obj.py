@@ -101,9 +101,9 @@ class Obj(dict):
 		if self.stream!=[]:
 			if self.stream.find('BT')>=0 and self.stream.find('ET')>=0:
 				self.isText=True
-#			elif self.stream.find('CMap')>=0:
-#				self.cmap=self.getDictionary()
-#				self.isCMap=True
+			elif self.stream.find('CMap')>=0:
+				self.cmap=self.getDictionary()
+				self.isCMap=True
 		if 'dictionary' in self and '/Type' in self['dictionary']:
 			if self['dictionary']['/Type']=='/Page':
 				self.isPage=True
@@ -116,12 +116,13 @@ class Obj(dict):
 		bfcStart=cmap.find('beginbfchar')+len('beginbfchar')
 		bfcEnd=cmap.find('endbfchar')
 		bfchars=cmap[bfcStart:bfcEnd].split('\n')
-		for line in bfchars:
-			pair=line.split(' ')
-			if len(pair)==2:
-				srcCode=int(pair[0].strip('<>'),base=16)
-				dstString=int(pair[1].strip('<>'),base=16)
-				fontDict[srcCode]=dstString
+		if bfcStart>=0 and bfcEnd>0:
+			for line in bfchars:
+				pair=line.split(' ')
+				if len(pair)==2:
+					srcCode=int(pair[0].strip('<>'),base=16)
+					dstString=int(pair[1].strip('<>'),base=16)
+					fontDict[srcCode]=dstString
 		bfrStart=cmap.find('beginbfrange')+len('beginbfrange')
 		bfrEnd=cmap.find('endbfrange')
 		if bfrStart>=0 and bfrEnd>0:
