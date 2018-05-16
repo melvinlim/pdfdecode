@@ -86,13 +86,18 @@ class Obj(dict):
 		self.isPage=False
 		self.isText=False
 		self.isCMap=False
-		if 'dictionary' in self and '/Filter' in self['dictionary'] and '/FlateDecode' in self['dictionary']['/Filter']:
-			import zlib
-			try:
-				self.stream=zlib.decompress(self.stream)
-			except:
-				print 'zlib failed header check'
-				self.stream=[]
+		if 'dictionary' in self and '/Filter' in self['dictionary']:
+			if '/FlateDecode' in self['dictionary']['/Filter']:
+				import zlib
+				self.rawStream=self.stream
+				try:
+					self.stream=zlib.decompress(self.stream,0)
+				except:
+					print 'zlib failed header check'
+					self.stream=[]
+			else:
+				print self['dictionary']['/Filter']
+#				assert False
 		if self.stream!=[]:
 			if self.stream.find('BT')>=0 and self.stream.find('ET')>=0:
 				self.isText=True

@@ -78,7 +78,7 @@ class Doc():
 				tmp=dereference(self,d['/Resources'])
 				d=tmp['dictionary']
 				if '/Font' in d:
-					print d['/Font']
+#					print d['/Font']
 					for font in d['/Font']:
 						fontInfo=d['/Font'][font]
 						cmap=0
