@@ -103,7 +103,9 @@ class Obj(dict):
 			if self['dictionary']['/Type']=='/Page':
 				self.isPage=True
 	def getDictionary(self):
-		assert self.stream!=[]
+		#assert self.stream!=[]
+		if self.stream==[]:
+			return []
 		cmap=self.stream
 		fontDict=dict()
 		bfcStart=cmap.find('beginbfchar')+len('beginbfchar')

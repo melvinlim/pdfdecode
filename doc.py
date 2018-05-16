@@ -103,6 +103,8 @@ class Doc():
 		#for x in tmp:
 		#	print x.cmap
 	def getTextSection(self,document):
+		if document==[]:
+			return []
 		textStart=document.find('BT')+len('BT')
 		textEnd=document.find('ET')
 		textSection=document[textStart:textEnd].split('\n')
